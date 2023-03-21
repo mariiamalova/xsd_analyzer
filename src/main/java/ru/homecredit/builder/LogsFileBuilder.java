@@ -6,6 +6,7 @@ import ru.homecredit.dto.XsdElement;
 import ru.homecredit.util.FileUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class LogsFileBuilder {
                 .collect(Collectors.groupingBy(XsdElement::getRelativeFilePath,
                         Collectors.collectingAndThen(Collectors.toList(),
                                 affectedElements -> affectedElements.stream()
+                                        .sorted(Comparator.comparingInt(XsdElement::level))
                                         .map(XsdElement::elementName)
                                         .toList())));
         return generateTextForLogFile(xsdWithAffectedElements);

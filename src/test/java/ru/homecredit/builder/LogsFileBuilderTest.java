@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 
 public class LogsFileBuilderTest extends DataCreatorUtilTest {
    private static final String expectedTextForLogFile = ("Cписок затронутых xsd файлов и элементов в них: \n" +
-                "src\\test\\resources\\xsd\\ContractWS.xsd [searchContractsExtendedRequest]\n" +
-                "src\\test\\resources\\xsd\\Person.xsd [PersonFilter]\n" +
-                "src\\test\\resources\\xsd\\ContractToCompare.xsd [ContractClientFilter]\n" +
-                "src\\test\\resources\\xsd\\Contract.xsd [ContractClientFilter]\n")
+           "src/test/resources/xsd/Person.xsd [PersonFilter]\n" +
+           "src/test/resources/xsd/ContractWS.xsd [searchContractsExtendedRequest]\n" +
+           "src/test/resources/xsd/ContractToCompare.xsd [ContractClientFilter]\n" +
+           "src/test/resources/xsd/Contract.xsd [ContractClientFilter]\n")
                         .replace("\\", FileUtil.SYSTEM_SEPARATOR);
 
     @Test
