@@ -13,11 +13,12 @@ import java.util.stream.Collectors;
 import static ru.homecredit.builder.PumlFileBuilder.END_ELEMENT_NAME;
 import static ru.homecredit.builder.PumlFileBuilder.START_ELEMENT_NAME;
 import static ru.homecredit.git.GitClient.FORMAT_XSD;
+import static ru.homecredit.util.FileUtil.SYSTEM_SEPARATOR;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LogsFileBuilder {
     private static final String END_OF_LOG_FILE = "_DependedFiles.txt";
-    private static final String FOLDER_FOR_LOGS = "\\dependencies";
+    private static final String FOLDER_FOR_LOGS =  SYSTEM_SEPARATOR + "dependencies";
 
     public static void build(Map<XsdElement, List<XsdElement>> traverse) {
         XsdElement element = traverse.entrySet().iterator().next().getKey();

@@ -20,7 +20,7 @@ public class FileUtil {
     public static final String SYSTEM_SEPARATOR = File.separator;
     public static final String PROJECT_DIR = Paths.get(System.getProperty("user.dir")).toString();
     public static final String PROJECT_PATH = PROJECT_DIR + SYSTEM_SEPARATOR;
-    public static final String FOLDER_TARGET = "\\target\\";
+    public static final String FOLDER_TARGET = SYSTEM_SEPARATOR + "target" + SYSTEM_SEPARATOR;
     public static final String FORMAT_XSD = ".xsd";
 
     public static List<String> searchInDirectory(File directory, String searchString, List<String> result) {
