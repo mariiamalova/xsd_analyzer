@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://homecredit.net/homer/ws/person" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pers="http://homecredit.net/homer/ws/person"
+           xmlns:cont="http://homecredit.net/homer/ws/contact"
+           xmlns:addr="http://homecredit.net/homer/ws/address"
+		   xmlns:codb="http://homecredit.net/homer/ws/codebook">
+	<xs:element name="PersonFilter" type="pers:PersonFilter"/>
+	<xs:complexType name="PersonFilter">
+		<xs:sequence>
+			<xs:element name="ident123213" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Searching criteria - passport number according data on application form
+
+Other</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cuid" type="xs:long" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Searching criteria - unique number in CIF system
+
+Other</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="pers:PersonName" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class represents client's FIO</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Income" type="pers:Income"/>
+	<xs:complexType name="Income">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Type of income
+
+Other
+CONTRACT.INCOME_TYPE
+
+	- moi - MAIN_OCCUPATION_INCOME
+	- boi - BY_OCCUPATION_INCOME
+	- oi - OTHER_INCOME
+	- pis - PARTNER_INCOME_SUM</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="amount" type="xs:double" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Client's amount income
+
+Other</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PersonAddress" type="pers:PersonAddress"/>
+	<xs:complexType name="PersonAddress">
+		<xs:complexContent>
+			<xs:extension base="addr:Address">
+				<xs:sequence>
+					<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Type of address
+
+Other
+REG 35
+(Allowed values only 1 and 2)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reports" type="xs:boolean" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Information whether address is correspondent
+
+Other
+One from a sent address has to be reported</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="registered" type="xs:date" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+The date of registration of an address</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Employment" type="pers:Employment"/>
+	<xs:complexType name="Employment">
+		<xs:sequence>
+			<xs:element name="employedFrom" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+The person is employed in current employment since month and year
+
+Other
+max. length 5
+MM/YY, where MM is month and YY is year</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="occupation" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Position in occupation of a person
+
+Other
+max. 50 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="employer" type="pers:Employer" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class which represents data about Employer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="OnlineCreditEmployment" type="pers:OnlineCreditEmployment"/>
+	<xs:complexType name="OnlineCreditEmployment">
+		<xs:complexContent>
+			<xs:extension base="pers:Employment">
+				<xs:sequence>
+					<xs:element name="experienceInYears" type="xs:int" minOccurs="1" maxOccurs="1" nillable="true"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="Employer" type="pers:Employer"/>
+	<xs:complexType name="Employer">
+		<xs:sequence>
+			<xs:element name="name123" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Name of employer
+
+Other
+max. 60 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ident" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Unique identification of employer
+
+Other
+max. 12 places (8 places only numbers)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sector" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Sector of an employer business
+
+Other
+REG 228</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="address" type="addr:Address" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class represents address of a employer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contacts" type="cont:Contact" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Class represents contacts to a employer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PersonalData" type="pers:PersonalData"/>
+	<xs:complexType name="PersonalData">
+		<xs:sequence>
+			<xs:element name="familyStatus" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Information about family status of a client
+
+Other
+REG 3</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="childNum" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Number of children
+
+Other
+max length 2, only numbers min value 0 </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="education" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Education
+
+Other
+REG 11</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fieldExperience" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Experience in a business field of a client
+
+Other
+max length 2 numbers, where numbers represents a year</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="incomeType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Type of income (???????????????, ?????????...)
+
+Other
+REG 1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="housingType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Housing type
+
+Other
+REG 2</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="birthPlace" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Birth place of client
+
+Other
+max. length 120, only Russian alphabet ???</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nameBorn" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Name of born
+
+Other
+max. 30 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nameMother" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Mother name
+
+Other
+max. 30 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+
+			<xs:element name="latinFirstName" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="latinLastName" type="xs:string" minOccurs="0" maxOccurs="1" />
+
+
+
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RealProperty" type="pers:RealProperty"/>
+	<xs:complexType name="RealProperty">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Type of property
+
+Other
+
+	- '1' - ???
+	- '2' - ????????
+	- '3' - ????
+	- '4' - ????????? ???????
+	- '5' - ?????
+	- '6' - ??????</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="address" type="addr:Address" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class represents address of a property</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Car" type="pers:Car"/>
+	<xs:complexType name="Car">
+		<xs:sequence>
+			<xs:element name="mark" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+mark of a car
+
+Other
+mark must have at most 40 chars</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="model" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Model of a car
+
+Other
+model must have at most 40 chars</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="number" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+number of a car
+
+Other</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="madeInCountry" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Made in country
+
+Other
+REG 377</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="vintage" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Date of vintage
+
+Other
+vintage must not be earlier than 1.1.1900 and not to be in the future</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Document" type="pers:Document"/>
+		<xs:complexType name="Document">
+		<xs:sequence>
+            <xs:element name="type" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mandatory field.
+                        Code of document type
+                        Possible values are:
+                        pass
+                        drive
+                        pens
+                        fpass
+                        ins
+                        hcc
+                        cre
+                        income_tax
+                        work_cert
+                        statm_acc_mil
+                        income_tax_part
+                        pens_soc_sec
+                        work
+                        labor
+                        sold
+                        trans_pass
+                        reg_ts
+                        statm_acc
+                        cttmt_acc
+                        kasko
+                        deed
+                        deed_n_res
+                        vhi
+                        ocre
+                        kkb
+                        tax
+                        fpass_cl
+                        ocpass
+                        mil_id
+                        posad
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="orderNumber" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mandatory field. Block of documents code current document belongs to.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+			<xs:element name="additionalAdded" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+                        Optional field. Designates that document was added by pressing button "Add"
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="attributes" type="pers:Attribute" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Optional field.
+                        List of document attributes (fields)
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+    <xs:complexType name="Attribute">
+		<xs:sequence>
+			<xs:element name="attributeCode" type="xs:string" >
+				<xs:annotation>
+					<xs:documentation>
+                        Mandatory field.
+                        Attribute code.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="valueDate" type="xs:date" minOccurs="0" >
+				<xs:annotation>
+					<xs:documentation>
+                        Optional field.
+                        This field is filled if attributeCode has type Date
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="valueString" type="xs:string" minOccurs="0" >
+				<xs:annotation>
+					<xs:documentation>
+                        Optional field.
+                        This field is filled if attributeCode has type String
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="valueNumber" type="xs:decimal" minOccurs="0" >
+				<xs:annotation>
+					<xs:documentation>
+                        Optional field.
+                        This field is filled if attributeCode has type Number
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RelationContact" type="pers:RelationContact"/>
+	<xs:complexType name="RelationContact">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="name" type="pers:PersonName" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class representing FIO of a person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contacts" type="cont:Contact" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The class representing a Contact</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Person" type="pers:Person"/>
+	<xs:complexType name="Person">
+		<xs:sequence>
+			<xs:element name="ident" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Number of passport
+
+Other
+number can consists only from digits 0-9, length must be between 4 and 17 chars.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cuid" type="xs:long" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+unique client identification in CIF system
+
+Other
+10 numbers ???</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="birth" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Optional
+
+Meaning
+Date of birth of a person
+
+Other
+birthDate must not be earlier than 1.1.1900 and not to be in the future</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="gender" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Gender of a person
+
+Other
+REG 12</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nationality" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Nationality of person
+
+Other
+REG 10</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="pers:PersonName" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class representing FIO of client</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="personalData" type="pers:PersonalData" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Class represents a basic personal data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="addresses" type="pers:PersonAddress" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of addresses</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="realProperty" type="pers:RealProperty" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of client's properties</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="employements" type="pers:Employment" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Class which represents a Employment of a person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relationContacts" type="pers:RelationContact" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>List of relation to a contact</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contacts" type="cont:Contact" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of contact related to a person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cars" type="pers:Car" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of cars of a person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="incomes" type="pers:Income" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of incomes of a client</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documents" type="pers:Document" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of documents of a client</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="OnlineCreditPerson" type="pers:OnlineCreditPerson"/>
+	<xs:complexType name="OnlineCreditPerson">
+		<xs:complexContent>
+			<xs:extension base="pers:Person">
+				<xs:sequence>
+					<xs:element name="onlineCreditEmployements" type="pers:OnlineCreditEmployment" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Class which represents a Employment of a person</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="PersonName" type="pers:PersonName"/>
+	<xs:complexType name="PersonName">
+		<xs:sequence>
+			<xs:element name="lastname" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Last name of a person
+
+Other
+max. 30 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="firstname" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+First name of a person
+
+Other
+max. 30 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="patronymic" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Optional/Mandatory
+Mandatory
+
+Meaning
+Fathers' name
+
+Other
+max. 30 characters only Russian alphabet</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="IncomeType" type="pers:IncomeType"/>
+	<xs:complexType name="IncomeType">
+		<xs:sequence>
+			<xs:element name="personType" type="codb:CustomerType">
+				<xs:annotation>
+					<xs:documentation>Type of person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="income" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Income of person</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

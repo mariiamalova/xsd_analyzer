@@ -1,0 +1,4134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://homecredit.net/homer/ws/contract"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cntr="http://homecredit.net/homer/ws/contract"
+           xmlns:user="http://homecredit.net/homer/ws/user"
+           xmlns:prod="http://homecredit.net/homer/ws/contract/product"
+           xmlns:codb="http://homecredit.net/homer/ws/codebook"
+           xmlns:pers="http://homecredit.net/homer/ws/person"
+           xmlns:cont="http://homecredit.net/homer/ws/contact"
+           xmlns:cmmn="http://homecredit.net/homer/ws/common"
+           xmlns:cd="http://homecredit.net/homer/ws/card"
+           xmlns:good="http://homecredit.net/homer/ws/goods"
+           xmlns:rpt="http://homecredit.net/homer/ws/report"
+           xmlns:addr="http://homecredit.net/homer/ws/address"
+           xmlns:slp="http://homecredit.net/homer/ws/sellerplace">
+    <xs:import namespace="http://homecredit.net/homer/ws/person" schemaLocation="Person.xsd"/>
+
+
+    <xs:annotation>
+        <xs:documentation>Version 1.3</xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="ContractStatusInQuorum" type="cntr:ContractStatusInQuorum"/>
+    <xs:simpleType name="ContractStatusInQuorum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NEW"/>
+            <xs:enumeration value="ACTIVE"/>
+            <xs:enumeration value="CLOSED"/>
+            <xs:enumeration value="SECURIZED"/>
+            <xs:enumeration value="SOLD"/>
+            <xs:enumeration value="BLOCKED"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SupplementAction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CREATE"/>
+            <xs:enumeration value="SIGN"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="QuickNoResultEnum" type="cntr:QuickNoResultEnum"/>
+    <xs:simpleType name="QuickNoResultEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CONTINUE"/>
+            <xs:enumeration value="REJECTED"/>
+            <xs:enumeration value="IN_PROCESS"/>
+            <xs:enumeration value="CHECK_DATA"/>
+            <xs:enumeration value="FILL_ADDRESS"/>
+            <xs:enumeration value="FILL_DATA"/>
+            <xs:enumeration value="APPROVAL"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="AvailableProductsEnum" type="cntr:AvailableProductsEnum"/>
+    <xs:simpleType name="AvailableProductsEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SPECIAL"/>
+            <xs:enumeration value="ZERO_OVERDRAFT_CARD"/>
+            <xs:enumeration value="HAS_CARD"/>
+            <xs:enumeration value="MFO_ONLY"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="BlazeValueCodeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="annuityHCFB">
+                <xs:annotation>
+                    <xs:documentation>Total amount of monthly payments in HCFB for the client
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="annuityOther">
+                <xs:annotation>
+                    <xs:documentation>Total amount of monthly payments in other banks (not in HCFB)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="clientType">
+                <xs:annotation>
+                    <xs:documentation>Client type in Blaze (n - new client, a - active existing client)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxCreditSCAmount"/>
+            <xs:enumeration value="maxCreditRDAmount"/>
+            <xs:enumeration value="needFullApplication"/>
+            <xs:enumeration value="maxCreditRFAmount"/>
+            <xs:enumeration value="maxCreditCOLAmount">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма Кредита КН по залогам без подтверждения дохода</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxCreditSCAmountICN">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма Кредита КН с подтверждением дохода (Income Confirmation Needed)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxCreditRDAmountICN">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма Кредита РК с подтверждением дохода (Income Confirmation Needed)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxCreditRFAmountICN">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма Кредита Рефинансирования с подтверждением дохода (Income Confirmation Needed)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxCreditCOLAmountICN">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма Кредита КН по залогам с подтверждением дохода (Income Confirmation Needed)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="maxLoanMCCAmount">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма займа МКК без подтверждения дохода</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="ExistContractEnum" type="cntr:ExistContractEnum"/>
+    <xs:simpleType name="ExistContractEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RC_CONTRACT"/>
+            <xs:enumeration value="TRIO_CONTRACT"/>
+            <xs:enumeration value="NEW_CONTRACT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="QuickNoReq" type="cntr:QuickNoReq"/>
+    <xs:complexType name="QuickNoReq">
+        <xs:sequence>
+            <xs:element name="originator" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="sellerplaceCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="userCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="quickNoApplicationNumber" type="xs:long" nillable="true" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="birthDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="birthPlace" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="contact" type="cont:Contact" nillable="true" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="document" type="pers:Document" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="internalCode" type="xs:string" nillable="true" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name" type="pers:PersonName" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="registrationAddress" type="pers:PersonAddress" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="QuickNoResult" type="cntr:QuickNoResult"/>
+    <xs:complexType name="QuickNoResult">
+        <xs:sequence>
+            <xs:element name="quickNoApplicationNumber" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="availableProducts" type="cntr:AvailableProductsEnum" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="cuid" type="xs:long" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="newCustomer" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="quickNoContractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="quickNoResult" type="cntr:QuickNoResultEnum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="checkDataDetail" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="blazeValue" type="cntr:BlazeValue" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="rejectReasonCode" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional
+                        reject reason code, filled if quickNoResult = reject
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rejectReason" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional
+                        name of reject reason. filled for corresponding rejectReasonCode
+                        see param.registers, reg_number = 401.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="BlazeValue" type="cntr:BlazeValue"/>
+    <xs:complexType name="BlazeValue">
+        <xs:sequence>
+            <xs:element name="code" type="cntr:BlazeValueCodeEnum">
+                <xs:annotation>
+                    <xs:documentation>Code of parameter</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="value" type="xs:string" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Value for passed code</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="ApplicationResult" type="cntr:ApplicationResult"/>
+    <xs:complexType name="ApplicationResult">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractResult">
+                <xs:sequence>
+                    <xs:element name="offers" type="cntr:ContractOffers" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="boxContractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Номер договора страхования
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="OffersAppliacation" type="cntr:OffersAppliacation"/>
+    <xs:complexType name="OffersAppliacation">
+        <xs:complexContent>
+            <xs:extension base="cntr:ApplicationData">
+                <xs:sequence>
+                    <xs:element name="scoringTypeCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="calcPreference" type="cntr:OffersCalcPreference" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Class represents preferences, which is used for calculation of offers in
+                                case of dynamic scoring
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="OfferCalcInsurancePreference" type="cntr:OfferCalcInsurancePreference"/>
+    <xs:complexType name="OfferCalcInsurancePreference">
+        <xs:sequence>
+            <xs:element name="paidByLoan" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Признак предпочтения по оплате за счет кредита или за счет собственных средств
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="insuranceCompany" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Наименование страховой компании, если у клиента есть предпочтение по страховой компании. Поле
+                        является необязательным, при незаполненном значении считаем, что у клиента нет предпочтений по
+                        страховой компании
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="insuranceGroup" type="prod:InsuranceGroup" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Признак группы типа страхования (страхование жизни, страхование от потери работы)
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="OffersCalcPreference" type="cntr:OffersCalcPreference"/>
+    <xs:complexType name="OffersCalcPreference">
+        <xs:complexContent>
+            <xs:extension base="prod:CalculationPreference">
+                <xs:sequence>
+                    <xs:element name="channelCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory in case, that productCode is not filled
+
+                                Meaning
+                                Channel code
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="productCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Product code
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="productRate" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Restriction on product rate
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="paymentNumMax" type="xs:int" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Restriction to number of payment, maximum
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="paymentMax" type="xs:double" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Restriction to high of regular payment
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="initPayMax" type="xs:double" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Restriction to initial payment, max.
+
+                                Other
+                                SS contracts
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="quickProcess" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Quick verification process
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="priority" type="xs:string" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                Information according which parameter should be offers ordered
+
+                                Other
+
+                                PP - Number of payment
+                                HP - Payment in cash
+                                VP - Payment amount
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="insuranceGoodsGroup" type="xs:long" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                Information about goods insurance
+
+                                Other
+                                SS contracts
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="offerCalcInsurancePreference" type="cntr:OfferCalcInsurancePreference"
+                                minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Атрибут предпочтения по страховке в рамках динамического скоринга.
+
+                                Other
+                                На каждую группу типов страхования должно быть не более одного объекта
+                                OfferCalcInsurancePreference в списке
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Offer" type="cntr:Offer"/>
+    <xs:complexType name="Offer">
+        <xs:sequence>
+            <xs:element name="offerNum" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Identification number of an offer
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="offerType" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Type of an offer.
+
+                        Other
+                        REG 406
+
+                        - alo - Alternative offer
+                        - dso - Dynamic scoring offer
+                        - dro - Debt restructuring offer
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="productSet" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Code of the product set containing the offered product at the given sellerplace
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Contract number.
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditAmount" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        High of credit, which is offered.
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="price" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Price of goods
+
+                        Other
+                        Mandatory for SS contracts
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="initPay" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Initial payment
+
+                        Other
+                        Mandatory for SS contract
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="payment" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        The high of regular payment
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentFees" type="xs:decimal" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        The sum of all monthly fees
+
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentNum" type="xs:int" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        The number of payments for a credit
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sendStatement" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Information whether statement service is required
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Status of an offer
+
+                        Other
+
+                        - a - active
+                        - n - inactive
+                        - s - choosen
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="insurance" type="prod:Insurance" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>The set of insurances, which are offered</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="product" type="prod:Product" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="validTo" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Date until which the offer is valid</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="approvedContractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="maxOuterLimit" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="versionRdTw" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Contract" type="cntr:Contract"/>
+    <xs:complexType name="Contract">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Contract number
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateReview" type="xs:date" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Date when contract was created (moving contract into r status)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditAmount" type="xs:double" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Credit amount of a contract</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="price" type="xs:double" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Price of goods. Mandatory for SS contracts</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="payment" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Regular high of payment number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="commision" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>High of commission on a contract</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="interestRate" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Interest rate of a contract</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateSign" type="xs:date" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Date of signing of contract</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Status of a contract related to codebook REG 15</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="accessStamp" type="user:AccessStamp" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="product" type="codb:CodeItem" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Class returns information about product in sense of Code and name
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="productSet" type="codb:CodeItem" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Information about product set (Code name)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sellerplace" type="codb:CodeItem" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Unique code of sellerplace</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Type of credit (SS, SC...)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="processStage" type="prod:ProcessStage" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+                        Stage of approval</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rateNum" type="xs:int" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Number of current airbank rate or null if contract doesn't belong to airbank product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="hasAlternatives" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>True, if there are some active alternatives for the given sellerplace for SC contract that has status "d"</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="scanWaitTime" type="xs:double" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Left time before contract cancellation, in hours.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="isMfo" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>true if credit is MFO credit, false if bank credit</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="channelSale" type="cntr:ChannelSaleEnum" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="signSellerplace" type="codb:CodeItem" minOccurs="0" maxOccurs="1" nillable="false"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ChannelSaleEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="a">
+                <xs:annotation>
+                    <xs:documentation>Administrative point</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="b">
+                <xs:annotation>
+                    <xs:documentation>Bank office</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="c">
+                <xs:annotation>
+                    <xs:documentation>Curier</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="ContractLiteFilter" type="cntr:ContractLiteFilter"/>
+    <xs:complexType name="ContractLiteFilter">
+        <xs:sequence>
+            <xs:element name="idCredit" type="xs:long" minOccurs="0"/>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="cuid" type="xs:long" minOccurs="0"/>
+            <xs:element name="idPerson" type="xs:long" minOccurs="0"/>
+            <xs:element name="statuses" type="cntr:Status" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Contract status and process stage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="0"/>
+            <xs:element name="requiredRDTW" type="xs:int" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractFilter" type="cntr:ContractFilter"/>
+    <xs:complexType name="ContractFilter">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Contract number
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sellerplaceCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Originating sellerplace code
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateReviewFrom" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Low border of a date review
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateReviewTo" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        High border of a date review
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="packetCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="statuses" type="cntr:Status" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Contract status and process stage</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="relatedToUser" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Only contract which was created by logged user
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentCardNumber" type="xs:string"
+                        minOccurs="0" maxOccurs="1"/>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="alternativesSellerplaceCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Sellerplace code for getting list of alternatives for SC/RD contract refused by system.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="channelSale" type="cntr:ChannelSaleEnum" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="requiredRDTW" type="xs:int" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractCardFilter" type="cntr:ContractCardFilter"/>
+    <xs:complexType name="ContractCardFilter">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractFilter">
+                <xs:sequence>
+                    <xs:element name="cardNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ForcedContractProceeded" type="cntr:ForcedContractProceeded"/>
+    <xs:complexType name="ForcedContractProceeded">
+        <xs:annotation>
+            <xs:documentation>Type for counting proceed contracts: total, proceeded successfully, proceeded with error</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="total" type="xs:int"/>
+            <xs:element name="succeeded" type="xs:int"/>
+            <xs:element name="failed" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractResult" type="cntr:ContractResult"/>
+    <xs:complexType name="ContractResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:Result">
+                <xs:sequence>
+                    <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Contract number to which is request related
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="status" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Current status of a contract
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="rejectReasonCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Code of rejection reason
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="rejectReason" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Name of rejection reason
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ContractDebt" type="cntr:ContractDebt"/>
+    <xs:complexType name="ContractDebt">
+        <xs:sequence>
+            <xs:element name="debtDays" type="xs:int" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        DPD on contract
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="debtAmount" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Current total debt
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="penaltyAmount" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Current high of unpaid penalties
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="outstandingDebtAmount" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Total client liabilities (Total debt amount + rest of instalments, which is not passed due date)
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastPaymentDebtDays" type="xs:int" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Amount of days from last payment. Should be empty for RD contracts
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="collMethod" type="codb:CodeItem" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="collBlock" type="codb:CodeItem" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ContractApplication" type="cntr:ContractApplication"/>
+    <xs:complexType name="ContractApplication">
+        <xs:complexContent>
+            <xs:extension base="cntr:ApplicationData">
+                <xs:sequence>
+                    <xs:element name="productCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                Selected product for purpose of an application.
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="productSetCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                Selected product set for purpose of an application
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="calcPreference" type="prod:CalculationPreference" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Class representing a clients preferences on a product.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="joinOriginationContractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Optional
+
+                                Meaning
+                                Parent contract number
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="midWebApplicationNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Optional
+                                Number of "mid" online-claim
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="alternative" type="cntr:Alternative" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Class representing alternative offers for rejected by system contract.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="refin" type="cntr:RefinancingForApplicationContractApp" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Refinancing settings</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="namedCardDeliveryAddress" type="cntr:NamedCardDeliveryAddress" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Address to delivery named card. Currently used for RD TW cards</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="noNameCardDeliveryAddress" type="cntr:NamedCardDeliveryAddress" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Address to delivery no name card. Currently used for RD TW cards</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientIncome" type="cntr:ClientIncome" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation></xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="box" type="cntr:InsuranceBoxDetail" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Данные заявки страхования</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="followUp" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Признак дозаполнения заявки, созданной в TLM канале</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="contractDeliveryAddress" type="cntr:ContractDeliveryAddress" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Address for photographing collateral and the client</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientNoApproveData" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Признак отсутствия подтверждения ПД клиентом</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Alternative">
+        <xs:sequence>
+            <xs:element name="parentNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Number of SC/RD contract in "d" status(rejected by system).</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="offerNumber" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Order number of the selected alternative.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="isChangedScanCopies" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Flag which means that scan copies have been changed.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PhoneVerification">
+        <xs:sequence>
+            <xs:element name="isVerified" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Saving as IS_PHONE_VERIF flag of contract.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attemptNumber" type="xs:long" maxOccurs="1" minOccurs="1"></xs:element>
+            <xs:element name="smsId" type="xs:long" maxOccurs="1" minOccurs="1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Packet" type="cntr:Packet"/>
+    <xs:complexType name="Packet">
+        <xs:annotation>
+            <xs:documentation>Optional/Mandatory
+                Mandatory
+
+                Meaning
+                Class represents information about basic operations (users and dates)
+
+                Other
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Code of package
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateCreated" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Date when package was created
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contracts" type="cntr:ContractAppendixes" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="accessStamp" type="user:AccessStamp" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="status" type="cntr:PacketStatus" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Type of package (SS, SC...)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sellerplace" type="codb:CodeItem" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ContractListItem">
+        <xs:sequence>
+            <xs:element name="collectionMethodCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="collectionMethodStatus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="createdInPeriod" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="creditAmount" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="evidSrv" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="regionCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="signDate" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="status" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="systemCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractClientExtended" type="cntr:ContractClientExtended"/>
+    <xs:complexType name="ContractClientExtended">
+        <xs:sequence>
+            <xs:element name="offer" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Information, whether there is a some active offer related to a contract
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="alternative" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Information, whether there is a some active alternative related to a contract
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contract" type="cntr:ContractClient" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OffersResult" type="cntr:OffersResult"/>
+    <xs:complexType name="OffersResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:Result">
+                <xs:sequence>
+                    <xs:element name="offers" type="cntr:ContractOffers" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ContractOffers" type="cntr:ContractOffers"/>
+    <xs:complexType name="ContractOffers">
+        <xs:sequence>
+            <xs:element name="status" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>REG 556</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="offers" type="cntr:Offer" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ReportType" type="cntr:ReportType"/>
+    <xs:complexType name="ReportType">
+        <xs:sequence>
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Type of report
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Report code
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Report name
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="enabled" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="url" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="parameters" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentType">
+        <xs:sequence>
+            <xs:element name="docIdent" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="docName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractProperties" type="cntr:ContractProperties"/>
+    <xs:complexType name="ContractProperties">
+        <xs:sequence>
+            <xs:element name="startPaymentPeriod" type="xs:int" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>day starting payment period. 1, 5, 15 or 25 day of month</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentDay" type="xs:int" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Date of regular instalment payment
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentNum" type="xs:int" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Number of payment
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="firstPaymentDate" type="xs:date" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Date of first payment on a contract
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="moratorium" type="xs:boolean" minOccurs="1" maxOccurs="1" nillable="true">
+            </xs:element>
+            <xs:element name="suspect" type="xs:boolean" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        HCI internal attribute (information whether client is suspected from fraud)
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="restructured" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="true"/>
+            <xs:element name="codeWord" type="xs:string" minOccurs="0" />
+            <xs:element name="requestPeriod" type="xs:int" minOccurs="0" />
+            <xs:element name="repaymentPeriod" type="xs:int" minOccurs="0" />
+            <xs:element name="recPaymentDate" type="xs:date" minOccurs="0" />
+            <xs:element name="nearPaymentDate" type="xs:date" minOccurs="0" maxOccurs="1" />
+            <xs:element name="nextPaymentDate" type="xs:date" minOccurs="0" maxOccurs="1" />
+            <xs:element name="numberOfRemainingPayments" type="xs:int" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractDetail" type="cntr:ContractDetail"/>
+    <xs:complexType name="ContractDetail">
+        <xs:complexContent>
+            <xs:extension base="cntr:Contract">
+                <xs:sequence>
+                    <xs:element name="data" type="cntr:ContractData" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Basic contract's data not related to person</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="debt" type="cntr:ContractDebt" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Current debts on contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="insurance" type="cntr:ContractInsurance" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Insurances related to contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="customers" type="cntr:Customer" minOccurs="1" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Customer's data</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="properties" type="cntr:ContractProperties" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Contract properties</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="fees" type="cntr:ContractFee" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Service fees related to contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="cards" type="cd:card" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="gracePeriod" type="xs:int" minOccurs="0" maxOccurs="1" default="50"/>
+                    <xs:element name="annuityType" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="annuityProc" type="xs:double" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="topUp" type="prod:TopUp" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="joinOriginationContractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Parent contract number</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="contractFlag" type="cntr:ContractFlag" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Flags currently set to contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="onlineLimit" type="cntr:OnlineLimit" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Класс с данными по онлайн лимитам
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="zeroOverdraftCards" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                Признак возможности открытия RD договора с нулевым лимитом. Заполняется true в случае, если blaze вернул отказ с признаком zeroOverdraftCards
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="rejectReasonCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Code of rejection reason
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="rejectReason" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Optional
+
+                                Meaning
+                                Name of rejection reason
+
+                                Other
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="productType" type="prod:ProductType"/>
+                    <xs:element name="airBankDetail" type="prod:AirBankDetail" minOccurs="0" />
+                    <xs:element name="lastPayDate" type="xs:date" minOccurs="0" />
+                    <xs:element name="refin" type="cntr:RefinancingForApplication" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Refinancing settings</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="activeFrom" type="xs:dateTime" minOccurs="0"/>
+                    <xs:element name="signedFrom" type="xs:date" minOccurs="0"/>
+                    <xs:element name="isSelectedIbs" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="smsPackageSelected" type="xs:boolean" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="isTW" type="xs:int" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="namedCardDeliveryAddress" type="cntr:NamedCardDeliveryAddress" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="noNamedCardDeliveryAddress" type="cntr:NamedCardDeliveryAddress" minOccurs="0"/>
+                    <xs:element name="cardType" type="cd:CardType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="maxOuterLimit" type="xs:decimal" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="changePaymentDatePeriod" type="xs:int" minOccurs="0" maxOccurs="1" />
+                    <xs:element name="signType" type="xs:string" minOccurs="0"/>
+                    <xs:element name="goodsDeliveredType" type="xs:string" minOccurs="0"/>
+                    <xs:element name="finishDate" type="xs:dateTime" minOccurs="0" nillable="false"/>
+                    <xs:element name="stopType" type="xs:int" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Process stop type:
+                                1 - Contract at the handle checks step
+                                2 - Waiting for outside system answer
+                                In other cases it will be absent
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="soldOut" type="cntr:SoldOutEnum" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="soldOutDate" type="xs:date" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="owner" type="cntr:Owner" minOccurs="0" maxOccurs="1" nillable="false"/>
+                    <xs:element name="nameRDTW" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="versionRdTw" type="xs:int" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="interestRate2" type="xs:double" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="billingPeriod" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="paymentPeriod" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="annuityMin" type="xs:double" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="graceCardPeriod" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="OnlineCreditContractDetail" type="cntr:OnlineCreditContractDetail"/>
+    <xs:complexType name="OnlineCreditContractDetail">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractDetail">
+                <xs:sequence>
+                    <xs:element name="idCredit" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="onlineCreditProductType" type="prod:OnlineCreditProductType" nillable="true"/>
+                    <xs:element name="processState" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="dateTimeReview" type="xs:dateTime" minOccurs="1" maxOccurs="1" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>DateTime when contract was created (moving contract into r status)</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="dateRatif" type="xs:dateTime" minOccurs="1" maxOccurs="1" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>Date when contract was ratified (moving contract into s status)</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="paymentNum" type="xs:int" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="monthPayment" type="xs:decimal" minOccurs="1" maxOccurs="1" nillable="true"/>
+                    <xs:element name="onlineCreditInsurance" type="cntr:OnlineCreditContractInsurance" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Insurances related to contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="onlineCreditCustomers" type="cntr:OnlineCreditCustomer" minOccurs="1" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Customer's data</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="expenses" type="cntr:Expense" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="polzaConsent" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="polzaProduct" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="signingInternetBank" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="posOnline" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="rd2NdBlockState" type="xs:string" minOccurs="0"/>
+                    <xs:element name="otherCardInfo" type="cntr:OtherCardInfo" minOccurs="0"/>
+                    <xs:element name="initPay" type="xs:decimal" minOccurs="0"/>
+                    <xs:element name="internetBankService" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="smsService" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="goodsHeadIds" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="sellerplaceFlags" type="slp:SellerplaceFlags" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="vkPay" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="posOnRd" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="posOnRd2" type="xs:boolean" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="OnlineLimit" type="cntr:OnlineLimit"/>
+    <xs:complexType name="OnlineLimit">
+        <xs:sequence>
+            <xs:element name="onlineASGL" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Значение АSGL
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="onlineALimitSC" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Значение онлайн доступного лимита SC
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="onlineALimitRD" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Значение онлайн доступного лимита RD
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="onlineLimitSCXsell" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Online limit for base SC product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="onlineLimitRDXsell" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Online limit for base RD product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractInsurance" type="cntr:ContractInsurance"/>
+    <xs:complexType name="ContractInsurance">
+        <xs:complexContent>
+            <xs:extension base="prod:Insurance">
+                <xs:sequence>
+                    <xs:element name="insuranceNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="insuranceStatus" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="dateStart" type="xs:date" minOccurs="0"/>
+                    <xs:element name="dateEnd" type="xs:date" minOccurs="0"/>
+                    <xs:element name="duration" type="xs:int" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="OnlineCreditContractInsurance" type="cntr:OnlineCreditContractInsurance"/>
+    <xs:complexType name="OnlineCreditContractInsurance">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractInsurance">
+                <xs:sequence>
+                    <xs:element name="insuranceId" type="xs:long" nillable="false"/>
+                    <xs:element name="insuranceProductDisplayName" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ContractInsurances" type="cntr:ContractInsurances"/>
+    <xs:complexType name="ContractInsurances">
+        <xs:sequence>
+            <xs:element name="insuranceMonthRate" type="xs:decimal" nillable="true"/>
+            <xs:element name="insuranceAmountRate" type="xs:decimal" nillable="true"/>
+            <xs:element name="insuranceNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="duration" type="xs:string" minOccurs="0"/>
+            <xs:element name="dateStart" type="xs:date" minOccurs="0"/>
+            <xs:element name="dateEnd" type="xs:date" minOccurs="0"/>
+            <xs:element name="premium" type="xs:decimal"/>
+            <xs:element name="amount" type="xs:decimal"/>
+            <xs:element name="insuranceType" type="prod:InsuranceType"/>
+            <xs:element name="insuranceStatus" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="OnlineCreditContractInsurances" type="cntr:OnlineCreditContractInsurances"/>
+    <xs:complexType name="OnlineCreditContractInsurances">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractInsurances">
+                <xs:sequence>
+                    <xs:element name="insuranceId" type="xs:long" nillable="false"/>
+                    <xs:element name="insuranceProductDisplayName" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="CreditLink" type="cntr:CreditLink"/>
+    <xs:complexType name="CreditLink">
+        <xs:sequence>
+            <xs:element name="linkType" type="xs:string"/>
+            <xs:element name="linkedContractNumber" type="xs:string"/>
+            <xs:element name="linkedContractStatus" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ApplicationData" type="cntr:ApplicationData"/>
+    <xs:complexType name="ApplicationData">
+        <xs:sequence>
+            <xs:element name="originator" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>System that originated the application (register 102)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sellerplaceCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>POS code</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Contract number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="purposeLoan" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Purpose of a loan (register 400)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="internalCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Negative characteristic information (register 103)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="positiveRank" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Positive characteristic information (register 258)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentMethod" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Way of credit payment (register 6)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="repaymentMethod" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Way of credit money providing (cash, on account) (register 190)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="suiteType" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Client's accompany (register 149)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="collectiveInsurance" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Collective insurance requirement</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="consultantCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Code of consultant who prepared the application</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentCardNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Number of payment card sent to client during campaign (max. 16 characters)
+                        If filled, client's identity is checked. In this case ident or cuid must be filled as well.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="applicants" type="cntr:Applicant" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Persons stated in the application (client, guarantor, partner, ...)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attraction" type="cntr:Attraction" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The way of attracting the client</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expenses" type="cntr:Expense" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Client's expenses</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="clientAccount" type="cntr:BankAccount" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="stampsNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="goodsCount" type="xs:int" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="goods" type="good:GoodsItem" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="noNameCard" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Client wants/does not want noNameCard</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="quickNoApplicationNumber" type="xs:long" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="calculateOnlineLimit" type="xs:boolean" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Признак возможности расчета онлайн лимита. Если занчение отсутствует, то при составлении вектора должно интерпретироваться как false.
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="namedCardWithNoNameCard" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="secondProduct" type="cntr:SecondProduct" minOccurs="0"/>
+            <xs:element name="scNonUsedMinLimitRD" type="cntr:PositiveDecimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Expected value of limit minimum up to which it will be necessary to reduce the limit on the RD contract. Can be transmitted through the creation and continuation of the contract.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="scNonUsedNewLimitRD" type="cntr:PositiveDecimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Actual value of RD limit to be reduced. Can be transmitted through the continuation of the contract.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="polzaConsent" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="scanSentEmail" type="xs:int" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Indication that the scanned copies sent by e-mail.
+                        If attribute equals "0" or is missing - interpreted that scan copies was not sent by email.
+                        If attribute equals "1" - scan copies was sent by email.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="phoneVerification" type="cntr:PhoneVerification" maxOccurs="1" minOccurs="0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="PositiveDecimal" type="cntr:PositiveDecimal"/>
+    <xs:simpleType name="PositiveDecimal">
+        <xs:restriction base="xs:decimal">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="Applicant" type="cntr:Applicant"/>
+    <xs:complexType name="Applicant">
+        <xs:complexContent>
+            <xs:extension base="cntr:Customer">
+                <xs:sequence>
+                    <xs:element name="photo" type="cntr:Photo" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="sourceType" type="cntr:ApplicantSource" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Customer" type="cntr:Customer"/>
+    <xs:complexType name="Customer">
+        <xs:complexContent>
+            <xs:extension base="pers:Person">
+                <xs:sequence>
+                    <xs:element name="otherLoan" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                The information whether person has another loans
+
+                                Other
+
+                                0 - no
+                                1 - now
+                                2 - past
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="type" type="codb:CustomerType" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Type of person
+
+                                Other
+                                REG 394
+                                Each contract has to have only one person of this type
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="OnlineCreditCustomer" type="cntr:OnlineCreditCustomer"/>
+    <xs:complexType name="OnlineCreditCustomer">
+        <xs:complexContent>
+            <xs:extension base="pers:OnlineCreditPerson">
+                <xs:sequence>
+                    <xs:element name="otherLoan" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>Optional/Mandatory
+                                Mandatory
+
+                                Meaning
+                                The information whether person has another loans
+
+                                Other
+
+                                0 - no
+                                1 - now
+                                2 - past
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="type" type="codb:CustomerType" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Type of person
+
+                                Other
+                                REG 394
+                                Each contract has to have only one person of this type
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="currentAccount" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>Active current account</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ContractClient" type="cntr:ContractClient"/>
+    <xs:complexType name="ContractClient">
+        <xs:complexContent>
+            <xs:extension base="cntr:Contract">
+                <xs:sequence>
+                    <xs:element name="client" type="pers:Person" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ContractClientFilter" type="cntr:ContractClientFilter"/>
+    <xs:complexType name="ContractClientFilter">
+        <xs:sequence>
+            <xs:element name="clientFilter" type="pers:PersonFilter" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="contractFilter" type="cntr:ContractFilter" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Class represents a filter according contract parameters</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Client" type="cntr:Client"/>
+    <xs:complexType name="Client">
+        <xs:complexContent>
+            <xs:extension base="pers:Person">
+                <xs:sequence>
+                    <xs:element name="contracts" type="cntr:Contract" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Class represents a data about client's contracts</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Expense" type="cntr:Expense"/>
+    <xs:complexType name="Expense">
+        <xs:sequence>
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Positive characteristic
+
+                        Other
+
+
+                        - rent
+                        - family - monthly family expenses
+                        - car - monthly expenses for a car
+                        - mobile - monthly payments for a cell phones
+                        - occl - total credit limit on RU contracts in other companies
+                        - curcost - common expenses
+                        - otl - total amount of a regular payments in other companies
+                        - otla - total amount of a debt outside homecredit
+                        - otex - other monthly expenses
+
+
+                        - liab - other liabilities
+
+
+                        CONTRACT.EXPENSES_TYPE
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="amount" type="xs:double" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Appendix" type="cntr:Appendix"/>
+    <xs:complexType name="Appendix">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Mandatory/Optional
+                        Mandatory
+
+                        Meaning
+                        Code of appendix
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Mandatory/Optional
+                        Mandatory
+
+                        Meaning
+                        Name of appendix
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="required" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Mandatory/Optional
+                        Mandatory
+
+                        Meaning
+                        Information, whether appendix is required for contract
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attached" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Mandatory/Optional
+                        Mandatory
+
+                        Meaning
+                        Information, whether appendix has been already attached.
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ContractFee" type="cntr:ContractFee"/>
+    <xs:complexType name="ContractFee">
+        <xs:sequence>
+            <xs:element name="groupCode" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Group of fee (fee for insurance, announcement etc.)
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Code of fee
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        name of fee (name of service)
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="amount" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Monthly amount for a fee
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Status of a fee
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="SecondProduct" type="cntr:SecondProduct"/>
+    <xs:complexType name="SecondProduct">
+        <xs:sequence>
+            <xs:element name="channelCode" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Attraction" type="cntr:Attraction"/>
+    <xs:complexType name="Attraction">
+        <xs:sequence>
+            <xs:element name="method" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Method of client attraction
+
+                        Other
+                        REG 533
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="campaignType" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Type of campaign
+
+                        Other
+                        REG 534
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="agentCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Code of agent who attracted a client
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="agentName" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        FIO of agent who attracted a client
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ContractData" type="cntr:ContractData"/>
+    <xs:complexType name="ContractData">
+        <xs:sequence>
+            <xs:element name="originator" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>System, which provided origination of document. Other REG 102 - add new value for
+                        UFO
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="purposeLoan" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Purpose of a loan - REG 400</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="internalCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Negative characteristic information - REG 103</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="positiveRank" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Positive characteristic. REG 258</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentMethod" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Type of paying for a credit - REG 6</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="repaymentMethod" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Type of money repayment (cash, on account) - REG 190</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="suiteType" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Type Suite - REG 149</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expenses" type="cntr:Expense" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Expenses of client</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bankAccounts" type="cntr:BankAccount" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Information about client's bank account. This information is set in second block
+                        of approving contract
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="attraction" type="cntr:Attraction" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Class represents information about way how was client obtained</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="consultant" type="user:User" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>userCode of employee who prepared an application</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="signSellerplace" type="codb:CodeItem" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="creditLink" type="cntr:CreditLink" minOccurs="0" maxOccurs="unbounded" >
+                <xs:annotation>
+                    <xs:documentation>Credits related to the contract</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ClientInfo" type="cntr:ClientInfo"/>
+    <xs:complexType name="ClientInfo">
+        <xs:sequence>
+            <xs:element name="cuid" type="xs:long" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="clientName" type="pers:PersonName" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Photo" type="cntr:Photo"/>
+    <xs:complexType name="Photo">
+        <xs:sequence>
+            <xs:element name="photo" type="xs:base64Binary" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Object which represents a photo of a client</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="photoSource" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Source of a photo</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="eyeCoordsRightY" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Eye position coordinate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="eyeCoordsRightX" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Eye position coordinate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="eyeCoordsLeftY" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Eye position coordinate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="eyeCoordsLeftX" type="xs:int" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Eye position coordinate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PhotoClient" type="cntr:PhotoClient"/>
+    <xs:complexType name="PhotoClient">
+        <xs:sequence>
+            <xs:element name="eyeCoordsLeftX" type="xs:integer" minOccurs="0"/>
+            <xs:element name="eyeCoordsLeftY" type="xs:integer" minOccurs="0"/>
+            <xs:element name="eyeCoordsRightX" type="xs:integer" minOccurs="0"/>
+            <xs:element name="eyeCoordsRightY" type="xs:integer" minOccurs="0"/>
+            <xs:element name="photoData" type="xs:base64Binary"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="ApplicantSource">
+        <xs:annotation>
+            <xs:documentation>Optional/Mandatory
+                Mandatory
+
+                Meaning
+                Information form which source system should take a data about applicant
+
+                Other
+
+                0 - from message
+                1 - from CIF
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="APPLICATION"/>
+            <xs:enumeration value="CIF"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="CustomerFinancialStatus" type="cntr:CustomerFinancialStatus"/>
+    <xs:complexType name="CustomerFinancialStatus">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Contract number of a contract from which of data taken
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateReview" type="xs:dateTime" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Date of review
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        unique identification in CIF
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="otherLoan" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        The information whether person has another loans
+
+                        Other
+
+                        0 - no
+                        1 - now
+                        2 - pastOther
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expenses" type="cntr:Expense" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="incomes" type="pers:Income" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="clientName" type="pers:PersonName" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PacketResult" type="cntr:PacketResult"/>
+    <xs:complexType name="PacketResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:Result">
+                <xs:sequence>
+                    <xs:element name="package" type="cntr:Packet" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="PacketFilter" type="cntr:PacketFilter"/>
+    <xs:complexType name="PacketFilter">
+        <xs:sequence>
+            <xs:element name="sellerplaceCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Sellerplace code</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="code" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Code of package
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="createdFrom" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        Low border of date of package creation
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="createdTo" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Optional
+
+                        Meaning
+                        High border of date of package creation
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Contract number
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="cntr:PacketStatus" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Type of package</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="requiredRDTW" type="xs:int" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="BankAccountType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CLIENT">
+                <xs:annotation>
+                    <xs:documentation>Client Account</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CREDIT">
+                <xs:annotation>
+                    <xs:documentation>current account</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ContractAppendixes" type="cntr:ContractAppendixes"/>
+    <xs:complexType name="ContractAppendixes">
+        <xs:sequence>
+            <xs:element name="readyForCompletation" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Optional/Mandatory
+                        Mandatory
+
+                        Meaning
+                        Information whether contract has all required appendixes attached.
+
+                        Other
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="packetCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="contract" type="cntr:Contract" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="offersStatus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="clientInfo" type="cntr:ClientInfo" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="duplicatePackage" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="BankAccount" type="cntr:BankAccount"/>
+    <xs:complexType name="BankAccount">
+        <xs:annotation>
+            <xs:documentation>
+                - bankAccount - codelist regbank
+                - currentAccount (client's account from quorum)
+                - clientAccount (personal account)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="accountNumber" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true"/>
+            <xs:element name="type" type="cntr:BankAccountType" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bank" type="codb:Bank" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="PacketStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PREPARED"/>
+            <xs:enumeration value="SENT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ContractWSFaultHandler">
+        <xs:sequence>
+            <xs:element name="faultCode">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="NO_DATA_FOUND">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs when contract for given contract number is not found
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="CONTRACT_CONCURRENT_MODIFICATION">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs when trying to save one contract twice in one
+                                    transaction
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="CONTRACT_IS_PROCESSING">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs if contract is already processing in Homer
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="RD_SIGN_ERROR">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs if contract cannot be signed without insurance
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="TOO_MANY_CONTRACTS">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs if period indicated in filter is more than 30 days
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="MISSING_MANDATORY_FIELDS">
+                            <xs:annotation>
+                                <xs:documentation>This fault occurs when user didn't fill all fields in the search
+                                    filter
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="faultReason" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Contains human-readable information about the reason of failure</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractDataResult" type="cntr:ContractDataResult"/>
+    <xs:complexType name="ContractDataResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:Result">
+                <xs:sequence>
+                    <xs:element name="contractStatus" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="cardStatus" type="xs:string" minOccurs="1" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>validityCard property of type Card</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="outstandingDebts" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="overdraftLimits" type="xs:decimal" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="collectiveInsurance" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                    <xs:element name="accountNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>property creditAccount of type CreditInfo</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ContractInformationFilter" type="cntr:ContractInformationFilter"/>
+    <xs:complexType name="ContractInformationFilter">
+        <xs:complexContent>
+            <xs:extension base="cntr:ContractCardFilter">
+                <xs:sequence>
+                    <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="overdraftOffersAmount" type="xs:int" minOccurs="0" maxOccurs="1" default="4"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="BlankReport">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="enabled" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="reportType" type="rpt:StaticReportType" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="RepaymentContract" type="cntr:RepaymentContract"/>
+    <xs:complexType name="RepaymentContract">
+        <xs:annotation>
+            <xs:documentation>
+                Results (details) of calculation for each contract
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Contract number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditType" type="prod:CreditType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Credit type of given contract (SS - Consumer loan, SC - Cash loan, RD - Revolving
+                        credit)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="accountNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Current account number related to Quorum</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="accountBalance" type="xs:double" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Amount of current account number related to Quorum</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="payoffRequest" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Determines, whether client asked for early repayment for given contract or not
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="payoffDone" type="xs:boolean" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Determines, whether contract was already paid off</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="closeDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="recommendDate" type="xs:date" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Recommended payment date by calculation (also known as advisePaymentDate)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="amortization" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Principal debt It could be empty (nillable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="interest" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Interest It could be empty (nillable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="instalmentDebt" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Amount of unpaid past instalments (also known as instalmentHi) It could be empty
+                        (nillable)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="fee" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Amount of fees to be paid for early repayment (type_instalments 3,13,31,20,76,84.
+                        In Russia are used only 3,13,84)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="penalty" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Penalty It could be empty (nillable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bankLost" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Bank financial loss. It could be empty (nillable)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="totalAmount" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>The total amount for pay off the contract. It could be empty (nillable)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateEndCurrentInterestPeriod" type="xs:date" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="partialEarlyRepaymentDate" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The date of partial early repayment
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditDate" type = "xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date of credit</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="instalmentNext" type = "xs:double" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Next instalment value.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="airBankInterestSum" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Sum of excessively paid interest for air product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="airBankDebtSum" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Real sum of debt with adjusted for excessively paid interest for air product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="RepaymentTotalByAccount" type="cntr:RepaymentTotalByAccount"/>
+    <xs:complexType name="RepaymentTotalByAccount">
+        <xs:annotation>
+            <xs:documentation>
+                Results of calculation by accounts
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="accountNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Current account number related to Quorum</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="accountBalance" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Amount of current account number related to Quorum</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="totalAmount" type="xs:double" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Amount of current account number related to Quorum</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContractFlag">
+        <xs:sequence>
+            <xs:element name="valueString" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Flag's string value</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="valueNumber" type="xs:decimal" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Flag's number value</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="valueDate" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Flag's date value</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="validFrom" type="xs:date" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="validTo" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Flag's validity to date</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="flagType" type="codb:CodeItem">
+                <xs:annotation>
+                    <xs:documentation>Type of flag</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="user" type="user:User" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GID">
+        <xs:sequence>
+            <xs:element name="systemCode" type="cntr:systemCodeEnum" maxOccurs="1" minOccurs="1" nillable="false"/>
+            <xs:element name="branch" type="xs:string" maxOccurs="1" minOccurs="1" nillable="false"/>
+            <xs:element name="typeObject" type="cntr:TypeObjectEnum" maxOccurs="1" minOccurs="1" nillable="false"/>
+            <xs:element name="id" type="xs:string" maxOccurs="1" minOccurs="1" nillable="false"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="systemCodeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HOMER"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TypeObjectEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CREDITPOS">
+                <xs:annotation>
+                    <xs:documentation>contract type SS</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CREDITCARD">
+                <xs:annotation>
+                    <xs:documentation>contract type RD</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CREDITLOAN">
+                <xs:annotation>
+                    <xs:documentation>contract type SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ContractServicesInfo">
+        <xs:sequence>
+            <xs:element name="gID" type="cntr:GID" minOccurs="1" maxOccurs="1" nillable="false"/>
+            <xs:element name="availability" type="cntr:Availability" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="contractStatus" type="cntr:ContractStatusEnum" minOccurs="1" maxOccurs="1" nillable="false"/>
+            <xs:element name="cards" type="cntr:Card" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ContractStatusEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="a">
+                <xs:annotation>
+                    <xs:documentation>active</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="d">
+                <xs:annotation>
+                    <xs:documentation>denied</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="f">
+                <xs:annotation>
+                    <xs:documentation>unused proposal</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="h">
+                <xs:annotation>
+                    <xs:documentation>amortized debt</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="i">
+                <xs:annotation>
+                    <xs:documentation>new</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="k">
+                <xs:annotation>
+                    <xs:documentation>completed</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="l">
+                <xs:annotation>
+                    <xs:documentation>claim</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="n">
+                <xs:annotation>
+                    <xs:documentation>signed</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="o">
+                <xs:annotation>
+                    <xs:documentation>offer posted</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="r">
+                <xs:annotation>
+                    <xs:documentation>postponement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="s">
+                <xs:annotation>
+                    <xs:documentation>approved</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="t">
+                <xs:annotation>
+                    <xs:documentation>cancelled</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="z">
+                <xs:annotation>
+                    <xs:documentation>returned to the store</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Availability">
+        <xs:sequence>
+            <xs:element name="availabilityType" type="cntr:AvailabilityTypeEnum" minOccurs="1" maxOccurs="1" nillable="false"/>
+            <xs:element name="availability" type="xs:boolean" minOccurs="1" maxOccurs="1" nillable="false"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="AvailabilityTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ContractWithoutDebt">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AllContractWithoutDebt">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ContractWithoutRestructuring">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RepaymentMethodCash">
+                <xs:annotation>
+                    <xs:documentation>applicable for SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AdvancedRepayment">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ChangeLimitOffers">
+                <xs:annotation>
+                    <xs:documentation>offer for changing overdraft limit. applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoPenalty">
+                <xs:annotation>
+                    <xs:documentation>No arrears. applicable for RD, SS.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AnnulContract">
+                <xs:annotation>
+                    <xs:documentation>service registered for contract termination. applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ChangeProductOffers">
+                <xs:annotation>
+                    <xs:documentation>applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CollectiveInsurance">
+                <xs:annotation>
+                    <xs:documentation>applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PaymentForgivenProduct">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RefuseCreditDate">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RegularEMailOn">
+                <xs:annotation>
+                    <xs:documentation>applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RegularMailOn">
+                <xs:annotation>
+                    <xs:documentation>applicable for SS, SC, RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SMSOn">
+                <xs:annotation>
+                    <xs:documentation>applicable for RD.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ContractIllInsurance">
+                <xs:annotation>
+                    <xs:documentation>insurance against accidents and diseases. applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ContractWorkInsurance">
+                <xs:annotation>
+                    <xs:documentation>insurance against job loss. applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CreditWaiverMade">
+                <xs:annotation>
+                    <xs:documentation>"Waiver of loan" service is already provided. applicable for SS, SC.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FirstPaymentReceived">
+                <xs:annotation>
+                    <xs:documentation>"First payment done. Applicable for SS,SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FinalPaymentReceived">
+                <xs:annotation>
+                    <xs:documentation>Final payment done. Applicable for SS,SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CurrentDateIsDateOfSigning">
+                <xs:annotation>
+                    <xs:documentation>Current Date is a sign date. Applicable for SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IsNoNameCardBlocked">
+                <xs:annotation>
+                    <xs:documentation>NNC card blocked by collection</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RequirementContractsOnAccount">
+                <xs:annotation>
+                    <xs:documentation>There're no contracts in state "requirement" connected to client's account. Applicable for SS,SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CardBlockedByCollectingDepartment">
+                <xs:annotation>
+                    <xs:documentation>Collecting Department blocked the card. Applicable for RD</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PaymentDateChangeActive">
+                <xs:annotation>
+                    <xs:documentation>Payment date change has been done  during contract validity. Applicable for SS,SC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AllCardsInBadStatus">
+                <xs:annotation>
+                    <xs:documentation>all cards in one of states   "s"(additional card issued),"u"(stolen),"x"(cancelled),"z"(lost). Applicable for RD</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="cardBlockedByAccountArrest">
+                <xs:annotation>
+                    <xs:documentation>Card was locked due to the client's account arrest. Applicable for RD</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="cardBlockedBySecurity">
+                <xs:annotation>
+                    <xs:documentation>Card was blocked by security reason</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Card">
+        <xs:sequence>
+            <xs:element name="cardNumber" type="xs:string"/>
+            <xs:element name="cardState" type="xs:string"/>
+            <xs:element name="antifraudBlock" type="cd:AntifraudBlock" minOccurs="0"/>
+            <xs:element name="dateEnd" type="xs:date"/>
+            <xs:element name="isNoName" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Start RejectionCalculation  -->
+
+    <xs:complexType name="RejectionCalculation">
+        <xs:sequence>
+            <xs:element name="contracts" type="cntr:RejectionContract" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="totalByAccount" type="cntr:RepaymentTotalByAccount" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="repayment" type="cntr:Repayment" minOccurs="0" />
+            <xs:element name="calculationNumber" type="xs:string" minOccurs="0" />
+            <xs:element name="result" type="cmmn:Result" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RejectionContract">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string"/>
+            <xs:element name="recommendDate" type="xs:date"/>
+            <xs:element name="dateSign" type="xs:date"/>
+            <xs:element name="signEarlyRepayment" type="xs:boolean"/>
+            <xs:element name="totalAmount" type="xs:decimal"/>
+            <xs:element name="amortization" type="xs:decimal"/>
+            <xs:element name="interest" type="xs:decimal"/>
+            <xs:element name="fee" type="xs:decimal"/>
+            <xs:element name="penalty" type="xs:decimal"/>
+            <xs:element name="bankLost" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Repayment">
+        <xs:sequence>
+            <xs:element name="repaymentAmount" type="xs:decimal"/>
+            <xs:element name="repaymentDate" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Status">
+        <xs:sequence>
+            <xs:element name="contractStatus" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="processStage" type="prod:ProcessStage" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- End RejectionCalculation  -->
+
+    <xs:simpleType name="NNCCardNumber">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{16}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="NNCCard">
+        <xs:sequence>
+            <xs:element name="nncCardNumber" type="cntr:NNCCardNumber"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="VerificationDetail" type="cntr:VerificationDetail"/>
+    <xs:complexType name="VerificationDetail">
+        <xs:sequence>
+            <xs:element name="date" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Verification dateTime</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="verificationText" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Verificaton comment</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="fullName" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Name of person who changed the status of the verification
+                        and made a comment</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ScanCopyStatusEnum" type="cntr:ScanCopyStatusEnum"/>
+    <xs:simpleType name="ScanCopyStatusEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="att">
+                <xs:annotation>
+                    <xs:documentation>Scan copies were attached</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="exp">
+                <xs:annotation>
+                    <xs:documentation>Scan copies are under verification</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="err">
+                <xs:annotation>
+                    <xs:documentation>Errors were found during verification</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="conf">
+                <xs:annotation>
+                    <xs:documentation>Scan copy verification was confirmed</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="fraud">
+                <xs:annotation>
+                    <xs:documentation>Fraud was found during verification</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="ScanCopyStatusResult" type="cntr:ScanCopyStatusResult"/>
+    <xs:complexType name="ScanCopyStatusResult">
+        <xs:sequence>
+            <xs:element name="scanCopyStatus" type="cntr:ScanCopyStatusEnum" minOccurs="1" maxOccurs="1" nillable="true">
+                <xs:annotation>
+                    <xs:documentation>Scan copy verification status</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="verificationDetail" type="cntr:VerificationDetail" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Verification history in chronological order</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="CreditBureauData" type="cntr:CreditBureauData"/>
+    <xs:complexType name="CreditBureauData">
+        <xs:sequence>
+            <xs:element name="creditDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Date of credit</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditAmount" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Initial amount owed under the contract </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditDebt" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Floating debt</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UIDHCFB" type="xs:long" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>ID договора, открытого в стороннем Банке, подлежащего рефинансированию. ID сгенерирован в Гомер.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="interestRateBlaze" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>процентная ставка, рассчитанная Blaze</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="clientCreditDebt" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сумма долга по договору клиента в другом банке со слов клиента</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="clientPreference" type="xs:int" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Предпочтение клиента</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditType" type="xs:int" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Тип кредита</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="RefinancingForApplication" type="cntr:RefinancingForApplication"/>
+    <xs:complexType name="RefinancingForApplication">
+        <xs:sequence>
+            <xs:element name="refinCashCreditAmount" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Desired amount over credit amount</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditsForRefinancing" type="cntr:CreditForRefinancingDetails" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>credit refinancing details</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="CreditForRefinancingDetails" type="cntr:CreditForRefinancingDetails"/>
+    <xs:complexType name="CreditForRefinancingDetails">
+        <xs:complexContent>
+            <xs:extension base="prod:CreditForRefinancing">
+                <xs:sequence>
+                    <xs:element name="ref" type="xs:int">
+                        <xs:annotation>
+                            <xs:documentation>index number</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="contractNumber" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Number of contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>Date of credit</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditAmount" type="xs:decimal">
+                        <xs:annotation>
+                            <xs:documentation>Initial amount owed under the contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditDebt" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Floating debt</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientCreditDebt" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Floating debt according to the customer</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="nextPaymentDate" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Date of next payment</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="bic" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Customer account bank BIC</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientAccountNumber" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Account number of Client</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditType" type="xs:int" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Тип кредита</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="RefinancingForApplicationContractApp" type="cntr:RefinancingForApplicationContractApp"/>
+    <xs:complexType name="RefinancingForApplicationContractApp">
+        <xs:sequence>
+            <xs:element name="refinCashCreditAmount" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Desired amount over credit amount</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditsForRefinancing" type="cntr:CreditForRefinancingDetailsContractApp" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>credit refinancing details</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="CreditForRefinancingDetailsContractApp" type="cntr:CreditForRefinancingDetailsContractApp"/>
+    <xs:complexType name="CreditForRefinancingDetailsContractApp">
+        <xs:complexContent>
+            <xs:extension base="prod:CreditForRefinancing">
+                <xs:sequence>
+                    <xs:element name="ref" type="xs:int">
+                        <xs:annotation>
+                            <xs:documentation>index number</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="contractNumber" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Number of contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditDate" type="xs:date">
+                        <xs:annotation>
+                            <xs:documentation>Date of credit</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditAmount" type="xs:decimal">
+                        <xs:annotation>
+                            <xs:documentation>Initial amount owed under the contract</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="creditDebt" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Floating debt</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientCreditDebt" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Floating debt according to the customer</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="nextPaymentDate" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Date of next payment</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="bic" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Customer account bank BIC</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="clientAccountNumber" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Account number of Client</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetRepaymentMethodResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:Result">
+                <xs:sequence>
+                    <xs:element name="contractRD" type="xs:string" minOccurs="0" maxOccurs="1" />
+                    <xs:element name="supplementNNCNumber" type="xs:string" minOccurs="0" maxOccurs="1" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="RepaymentType">
+        <xs:sequence>
+            <xs:element name="repaymentTypeCode" type="cntr:RepaymentTypeCodeEnum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="repaymentTypeName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="repaymentAvailability" type="cntr:RepaymentAvailabilityEnum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="requisites" type="cntr:Requisite" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="RepaymentTypeCodeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="e"/>
+            <xs:enumeration value="h"/>
+            <xs:enumeration value="n"/>
+            <xs:enumeration value="t"/>
+            <xs:enumeration value="o"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="OtherCardInfo">
+        <xs:sequence>
+            <xs:element name="token" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="pan" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="month" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="year" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="email" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="RepaymentAvailabilityEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AVAILABLE"/>
+            <xs:enumeration value="AVAILABLE_WITH_RESTRICT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Requisite">
+        <xs:sequence>
+            <xs:element name="clientAccount" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bic" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="productName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="maskedCardNum" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="cardBalance" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="cardLimit" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExtQuickNoRequest">
+        <xs:sequence>
+            <xs:element name="originator" type="xs:string"/>
+            <xs:element name="sellerplaceCode" type="xs:string"/>
+            <xs:element name="userCode" type="xs:string"/>
+            <xs:element name="productType" type="cntr:ExtQuickNoProductTypeEnum"/>
+            <xs:element name="internalCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="cuid" type="xs:long" minOccurs="0"/>
+            <xs:element name="fio" type="pers:PersonName"/>
+            <xs:element name="birthDate" type="xs:date"/>
+            <xs:element name="gender" type="xs:string"/>
+            <xs:element name="personalData" type="pers:PersonalData" minOccurs="0"/>
+            <xs:element name="documents" type="pers:Document" maxOccurs="unbounded"/>
+            <xs:element name="addresses" type="pers:PersonAddress" maxOccurs="unbounded"/>
+            <xs:element name="contacts" type="cont:Contact" maxOccurs="unbounded"/>
+            <xs:element name="employedFrom" type="xs:date" minOccurs="0"/>
+            <xs:element name="incomes" type="pers:Income" maxOccurs="unbounded"/>
+            <xs:element name="employerAddress" type="addr:Address" minOccurs="0"/>
+            <xs:element name="phoneVerification" type="cntr:PhoneVerification" minOccurs="0"/>
+            <xs:element name="appQuickNoData" type="cntr:AppQuickNoData" minOccurs="0"/>
+            <xs:element name="onlineAppChannel" type="xs:string" minOccurs="0"/>
+            <xs:element name="onlineAppChannelGroup" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="ExtQuickNoResponse">
+       <xs:sequence>
+           <xs:element name="extQuickNoStatus" type="cntr:ExtQuickNoStatusEnum"/>
+           <xs:element name="extQuickNoApplicationNumber" type="xs:long"/>
+           <xs:element name="extQuickNoContractNumber" type="xs:string" minOccurs="0"/>
+           <xs:element name="blazeValue" type="cntr:BlazeValue" minOccurs="0" maxOccurs="unbounded"/>
+           <xs:element name="rejectReasonCode" type="xs:string" minOccurs="0"/>
+           <xs:element name="rejectReason" type="xs:string" minOccurs="0"/>
+           <xs:element name="extQuickNoResult" type="cntr:ExtQuickNoResult" minOccurs="0"/>
+           <xs:element name="cuid" type="xs:long" minOccurs="0"/>
+           <xs:element name="newCustomer" type="xs:boolean" minOccurs="0"/>
+           <xs:element name="maxCreditTopUpAmount" type="xs:decimal" minOccurs="0"/>
+           <xs:element name="maxCreditTopUpAmountICN" type="xs:decimal" minOccurs="0"/>
+           <xs:element name="isPseudo" type="xs:boolean" minOccurs="0"/>
+           <xs:element name="clientFormAvailable" type="xs:boolean" minOccurs="0"/>
+           <xs:element name="maxCreditRFOverDebtAmount" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма сверх задолженности по рефину без ПД</xs:documentation>
+                </xs:annotation>
+           </xs:element>
+           <xs:element name="maxCreditRFOverDebtAmountICN" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма сверх задолженности по рефину с ПД</xs:documentation>
+                </xs:annotation>
+           </xs:element>
+       </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AppQuickNoData">
+        <xs:sequence>
+            <xs:element name="car" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="relationContacts" type="pers:RelationContact" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="realProperty" type="pers:RealProperty" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="employements" type="pers:Employment" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="creditAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="paymentNum" type="xs:int" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExtQuickNoResult">
+        <xs:sequence>
+            <xs:element name="offers" type="cntr:QuickNoOffer" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="haveRefin" type="xs:int" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="smsPackageSelected" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="productTypeDesired" type="cntr:ExtQuickNoProductTypeEnum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Предпочтенный клиентом тип кредита при мультиподборе</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="validTo" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Срок действия заявки QN</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="QuickNoOffer">
+        <xs:sequence>
+            <xs:element name="offerNum" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="productSet" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="creditAmount" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="payment" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="paymentNum" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="sendStatement" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="insurance" type="prod:Insurance" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="product" type="prod:ProductCalculation" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="maxOuterLimit" type="xs:double" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="versionRdTw" type="xs:int" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="incomeConfirmationNeeded" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="nameRDTW" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ExtQuickNoStatusEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="continue"/>
+            <xs:enumeration value="rejected"/>
+            <xs:enumeration value="continueNMD"/>
+            <xs:enumeration value="error"/>
+            <xs:enumeration value="inProcess"/>
+            <xs:enumeration value="dataError"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ExtQuickNoProductTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SC">
+                <xs:annotation>
+                    <xs:documentation>Cash loan</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RD">
+                <xs:annotation>
+                    <xs:documentation>Revolving credit</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SCRD"/>
+            <xs:enumeration value="RDSC"/>
+            <xs:enumeration value="TopUp">
+                <xs:annotation>
+                    <xs:documentation>TopUp</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Refin">
+                <xs:annotation>
+                    <xs:documentation>TopUp</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MICRO_CASH"/>
+            <xs:enumeration value="RDTW"/>
+            <xs:enumeration value="CURRENT">
+                <xs:annotation>
+                    <xs:documentation>Тип продукта не передается. Используется тип продукта ExtQN заявки</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ContractAggregateInfo">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="collectionMethod" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hasOverdueDebt" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="wasOverdueDebt" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hasDebt" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="paymentsRedemption" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="hasEnoughMoneyForLastPayment" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContractService">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="partnerDzb" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="dzb" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="NamedCardDeliveryAddress" type="cntr:NamedCardDeliveryAddress"/>
+    <xs:complexType name="NamedCardDeliveryAddress">
+        <xs:sequence>
+            <xs:element name="deliveryPoint" type="cntr:NamedCardDeliveryPointEnum" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="deliveryAddress" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bankOfficeAddress" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="address" type="pers:PersonAddress" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="deliveryCourierTimeSlotId" type="xs:string" minOccurs="0"/>
+            <xs:element name="deliveryCourierAddress" type="addr:Address" minOccurs="0"/>
+            <xs:element name="paymentSystem" type="cd:PaymentSystemEnum" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ContractDeliveryAddress" type="cntr:ContractDeliveryAddress"/>
+    <xs:complexType name="ContractDeliveryAddress">
+        <xs:sequence>
+            <xs:element name="twCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="homerCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="addressType" type="xs:string" minOccurs="0"/>
+            <xs:element name="deliveryCourierAddress" type="addr:Address" minOccurs="0"/>
+            <xs:element name="deliveryCourierTimeSlotId" type="xs:string" minOccurs="0"/>
+            <xs:element name="channelSale" type="cntr:ContractDeliveryChannelEnum"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="ContractDeliveryChannelEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AP">
+                <xs:annotation>
+                    <xs:documentation>delivery to administration point</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BO">
+                <xs:annotation>
+                    <xs:documentation>delivery to bank office</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="COURIER">
+                <xs:annotation>
+                    <xs:documentation>delivery courier</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="ClientIncome" type="cntr:ClientIncome"/>
+    <xs:complexType name="ClientIncome">
+        <xs:sequence>
+            <xs:element name="scanIncome" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="confirmedIncomeType" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="NamedCardDeliveryPointEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="P">
+                <xs:annotation>
+                    <xs:documentation>delivery to postal office</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="B">
+                <xs:annotation>
+                    <xs:documentation>delivery to bank office</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="C">
+                <xs:annotation>
+                    <xs:documentation>delivery courier</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="A">
+                <xs:annotation>
+                    <xs:documentation>delivery to administration point</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="S">
+                <xs:annotation>
+                    <xs:documentation>delivery to office Svyaznoy</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="bankOffice" type="cntr:BankOffice"/>
+    <xs:complexType name="BankOffice">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="address" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RestructList">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="restructCategory" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="restructDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Payment">
+        <xs:sequence>
+      	    <xs:element name="date" type="xs:dateTime"/>
+      	    <xs:element name="amount" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContractParametersList">
+        <xs:sequence>
+      	    <xs:element name="contractParameter" type="cntr:Parameter" maxOccurs="unbounded" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Parameter">
+	    <xs:sequence>
+		    <xs:element name="paramName" type="xs:string" />
+		    <xs:element minOccurs="0" name="valueDate" type="xs:date" />
+		    <xs:element minOccurs="0" name="valueNumber" type="xs:decimal" />
+		    <xs:element minOccurs="0" name="valueString" type="xs:string" />
+	    </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InsuranceBoxDetail">
+        <xs:sequence>
+            <xs:element name="productCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="insurancePremium" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="insuranceApplicantData" type="cntr:InsuranceApplicantData" maxOccurs="1" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InsuranceApplicantData">
+        <xs:sequence>
+            <xs:element name="insurer" type="cntr:InsurancePerson" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="insuredPerson" type="cntr:InsurancePerson" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="insuredPropertyAddress" type="addr:Address" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InsurancePerson">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="middleName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="lastName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="gender" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="birthDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="maritalStatus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="passport" type="cntr:Passport" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mobilePhone" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="homePhone" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="registrationAddress" type="addr:Address" minOccurs="0" maxOccurs="1" />
+            <xs:element name="contactAddress" type="addr:Address" minOccurs="0" maxOccurs="1" />
+            <xs:element name="snils" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="birthPlace" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Passport">
+        <xs:sequence>
+            <xs:element name="ident" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="issueDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="issuer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="issuerCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IncomeInfo">
+        <xs:sequence>
+            <xs:element name="income" type="xs:decimal"/>
+            <xs:element name="typeCode" type="xs:string"/>
+            <xs:element name="confirmed" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ConfInfo">
+        <xs:sequence>
+            <xs:element name="incomeConfNeeded" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="incomeConfAmount" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="prodType" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExtQuickNoApplication">
+        <xs:sequence>
+            <xs:element name="extQuickNoApplicationNumber" type="xs:long">
+                <xs:annotation>
+                    <xs:documentation>Номер заявки contract.quickno_request.ID</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="cntr:InactiveExtQNStatusEnum"/>
+            <xs:element name="blazeValue" type="cntr:BlazeValue" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Максимальная сумма кредита, доступная клиенту</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="creditTypeDesire" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Тип приоритетного продукта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="validTo" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Действует до – значение даты и времени</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rejectReason" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Причина отказа Обязательно, если status=Rejected</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rejectReasonCode" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="InactiveExtQNStatusEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="cancelled"/>
+            <xs:enumeration value="rejected"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="GetInactiveExtQNResult">
+        <xs:complexContent>
+            <xs:extension base="cmmn:SimpleBusinessResult">
+                <xs:sequence>
+                    <xs:element name="code" type="cntr:GetInactiveExtQNResultEnum"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="GetInactiveExtQNResultEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="noQuickNoRequest">
+                <xs:annotation>
+                    <xs:documentation>У клиента нет аннулированных и отказанных QuickNo за последние 14 дней</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ConfirmationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="pfr"/>
+            <xs:enumeration value="Document"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="IncomeDetails">
+        <xs:sequence>
+            <xs:element name="originatorAm" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Система в которой была распознана/введена сумма дохода</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="amount" type="xs:decimal" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Заполнение обязательно, если originator = ‘u’</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="incomeTypeCode" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Код источника подтверждения дохода клиента</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="links" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Ссылки на документы в безпасном формате</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inn" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>ИНН. Заполнение обязательно, если передан amount и document.typeCode=2NDFL</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="employerName" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Наименование работодателя</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="documentTypeCode" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Тип прикладываемой справки или полученного подтверждения дохода из иных источников</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ProceedExtendedQNWithIncomeResult">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Код ошибки</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Значение ошибки (детализация)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="SoldOutEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="s">
+                <xs:annotation>
+                    <xs:documentation>Договор продан</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="p">
+                <xs:annotation>
+                    <xs:documentation>Договор подготовлен к продаже</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="b">
+                <xs:annotation>
+                    <xs:documentation>Договор выкуплен</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="i">
+                <xs:annotation>
+                    <xs:documentation>Секьюритизация с обслуживанием в ХКФБ</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Owner">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer" minOccurs="1" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Идентификатор собственника
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Наименование собственника
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="phone" type="xs:string" minOccurs="0" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Номер телефона
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="address" type="xs:string" minOccurs="0" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Юридический адрес
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ProductFeeRate">
+        <xs:sequence>
+            <xs:element name="type" type="cntr:FeeRateTypeEnum" minOccurs="1" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Ставка комиссии
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="value" type="xs:double" minOccurs="1" maxOccurs="1" nillable="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        Значение ставки комиссии
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="FeeRateTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ITO">
+              <xs:annotation>
+                   <xs:documentation>Комиссия ИТО</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ACTION">
+              <xs:annotation>
+                   <xs:documentation>Комиссия Акция</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:element name="ExternalQNStatus" type="cntr:ExternalQNStatus"/>
+    <xs:simpleType name="ExternalQNStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="extQNRejected"/>
+            <xs:enumeration value="extQNNMD"/>
+            <xs:enumeration value="extQNChoise"/>
+            <xs:enumeration value="extQNConfNeeded"/>
+            <xs:enumeration value="extQNContAvailable"/>
+            <xs:enumeration value="extQNCanceled"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="ExtQNResponseData" type="cntr:ExtQNResponseData"/>
+    <xs:complexType name="ExtQNResponseData">
+        <xs:sequence>
+            <xs:element name="dateCreate" type="xs:dateTime"/>
+            <xs:element name="creditAmount" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="extQNStatus" type="cntr:ExternalQNStatus"/>
+            <xs:element name="validTo" type="xs:dateTime"/>
+            <xs:element name="empFio" type="cntr:EmpFio"/>
+            <xs:element name="offeredInsuranse" type="cntr:OfferedInsuranse" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ExtQNResult" type="cntr:ExtQNResult"/>
+    <xs:complexType name="ExtQNResult">
+        <xs:sequence>
+            <xs:element name="code" type="cntr:ExtQNResultCode"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ExtQNResultCode" type="cntr:ExtQNResultCode"/>
+    <xs:simpleType name="ExtQNResultCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="noExtQNFound"/>
+            <xs:enumeration value="tooManyIdEmpRequested"/>
+            <xs:enumeration value="noReportFound"/>
+            <xs:enumeration value="OK"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="OfferedInsuranse" type="cntr:OfferedInsuranse"/>
+    <xs:complexType name="OfferedInsuranse">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="EmpFio" type="cntr:EmpFio"/>
+    <xs:complexType name="EmpFio">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+            <xs:element name="middleName" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Loan" type="cntr:Loan"/>
+    <xs:complexType name="Loan">
+        <xs:sequence>
+            <xs:element name="contractNumber" type="xs:string"/>
+            <xs:element name="contractStatus" type="xs:string"/>
+            <xs:element name="dateSign" type="xs:date"/>
+            <xs:element name="creditAmount" type="xs:decimal"/>
+            <xs:element name="account" type="xs:string" minOccurs="0"/>
+            <xs:element name="accountBalance" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="loanType" type="xs:string"/>
+            <xs:element name="isMfo" type="xs:boolean"/>
+            <xs:element name="creditType" type="xs:string"/>
+            <xs:element name="isGroupContract" type="xs:boolean"/>
+            <xs:element name="isOverdue" type="xs:boolean"/>
+            <xs:element name="debtToday" type="xs:decimal"/>
+            <xs:element name="lastPromiseDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="currentCollectionMethod" type="xs:string" minOccurs="0"/>
+            <xs:element name="isCollected" type="xs:boolean"/>
+            <xs:element name="overdues" type="cntr:Overdues" minOccurs="0"/>
+            <xs:element name="additionalServices" type="cntr:AdditionalService" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="payments" type="cntr:Payments" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Overdues" type="cntr:Overdues"/>
+    <xs:complexType name="Overdues">
+        <xs:sequence>
+            <xs:element name="debtAmount" type="xs:decimal"/>
+            <xs:element name="debtPeriod" type="xs:int"/>
+            <xs:element name="debtPeriodAll" type="xs:int"/>
+            <xs:element name="debtDetails" type="cntr:DebtDetail" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="DebtDetail" type="cntr:DebtDetail"/>
+    <xs:complexType name="DebtDetail">
+        <xs:sequence>
+            <xs:element name="debtType" type="xs:string"/>
+            <xs:element name="amount" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="AdditionalService" type="cntr:AdditionalService"/>
+    <xs:complexType name="AdditionalService">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="code" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Payments" type="cntr:Payments"/>
+    <xs:complexType name="Payments">
+        <xs:sequence>
+            <xs:element name="currentPaymentDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="currentPaymentAmount" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="nextPaymentDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="nextPaymentAmount" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="lastRepaymentDate" type="xs:date" minOccurs="0"/>
+            <xs:element name="lastRepaymentAmount" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+	<xs:complexType name="DebtList">
+		<xs:sequence>
+			<xs:element name="contractNo" type="xs:string" />
+			<xs:element name="principalDebt" type="xs:decimal" />
+			<xs:element name="interestDebt" type="xs:decimal" />
+			<xs:element name="feeDebt" type="xs:decimal" />
+			<xs:element name="penaltyDebt" type="xs:decimal" />
+			<xs:element name="dutyDebt" type="xs:decimal" />
+		</xs:sequence>
+	</xs:complexType>
+
+    <xs:element name="RefinContractDetails" type="cntr:RefinContractDetails"/>
+    <xs:complexType name="RefinContractDetails">
+        <xs:sequence>
+            <xs:element name="UIDHCFB" type="xs:long" minOccurs="0"/>
+            <xs:element name="contractNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="bic" type="xs:string" minOccurs="0"/>
+            <xs:element name="clientAccountNumber" type="xs:string" minOccurs="0"/>
+            <xs:element name="clientCreditDebt" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="interestRate" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="RefinContractDetailsResult" type="cntr:RefinContractDetailsResult"/>
+    <xs:complexType name="RefinContractDetailsResult">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="RefinContractPreferenceDetails" type="cntr:RefinContractPreferenceDetails"/>
+    <xs:complexType name="RefinContractPreferenceDetails">
+        <xs:sequence>
+            <xs:element name="UIDHCFB" type="xs:long" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

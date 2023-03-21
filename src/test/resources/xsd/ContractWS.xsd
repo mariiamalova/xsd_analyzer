@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://homecredit.net/homer/ws/contractws"
+           targetNamespace="http://homecredit.net/homer/ws/contractws"
+           elementFormDefault="qualified"
+           xmlns:cmmn="http://homecredit.net/homer/ws/common"
+           xmlns:cntr="http://homecredit.net/homer/ws/contract"
+           xmlns:st="http://homecredit.ru/service/types"
+           xmlns:good="http://homecredit.net/homer/ws/goods">
+    <xs:annotation>
+        <xs:documentation>Version: 1.0</xs:documentation>
+    </xs:annotation>
+
+    <xs:import namespace="http://homecredit.net/homer/ws/person" schemaLocation="Person.xsd"/>
+    <xs:import namespace="http://homecredit.net/homer/ws/contract" schemaLocation="Contract.xsd"/>
+
+
+    <!-- getContract -->
+    <xs:element name="getContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contract" type="cntr:ContractDetail"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- updateRefinContractDetails -->
+    <xs:element name="updateRefinContractDetailsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="refinContractDetails" type="cntr:RefinContractDetails" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateRefinContractDetailsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cntr:RefinContractDetailsResult" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getOnlineCreditContract -->
+    <xs:element name="getOnlineCreditContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOnlineCreditContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contract" type="cntr:OnlineCreditContractDetail" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getOnlineCreditContract -->
+    <xs:element name="getOnlineCreditCustomerRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOnlineCreditCustomerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customer" type="cntr:OnlineCreditCustomer" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!--getContractByCuid -->
+    <xs:element name="getContractByCuidRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="status" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="period" type="xs:int" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractByCuidResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contracts" type="cntr:ContractListItem" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- searchContractsLite -->
+    <xs:element name="searchContractsLiteRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filter" type="cntr:ContractLiteFilter" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="searchContractsLiteResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contracts" type="cntr:Contract" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- searchContracts -->
+    <xs:element name="searchContractsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filter" type="cntr:ContractFilter" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="searchContractsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contracts" type="cntr:Contract" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- searchContractsExtended -->
+    <xs:element name="searchContractsExtendedRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filter" type="cntr:ContractClientFilter" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="searchContractsExtendedResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contracts" type="cntr:ContractClientExtended" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- set2ndBlockFilled -->
+    <xs:element name="set2NdBlockFilledRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="set2NdBlockFilledResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- setRepaymentMethod -->
+    <xs:element name="setRepaymentMethodRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="repaymentMethod" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="bic" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="clientAccountNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="namedCardWithNoNameCard" type="xs:boolean" minOccurs="0"/>
+                <xs:element name="cardNumber" minOccurs="0">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:pattern value="\d{16}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="otherCardInfo" type="cntr:OtherCardInfo" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setRepaymentMethodResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cntr:SetRepaymentMethodResult" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getContractRepaymentTypes -->
+    <xs:element name="getContractRepaymentTypesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="systemCode" type="st:systemCodeEnum" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractRepaymentTypesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="repaymentTypes" type="cntr:RepaymentType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- setExpeditorAsCurrentUser for JHOMER-8873 -->
+    <xs:element name="setExpeditorAsCurrentUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="sellerplaceCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setExpeditorAsCurrentUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setNoNameCardRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cardNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="namedCardWithNoNameCard" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="idLoyalty" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="superiorCode" type="xs:string" minOccurs="0"/>
+                <xs:element name="action" type="st:actionEnum" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setNoNameCardResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="error" type="cmmn:Error" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="insertContractFlagRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="flagType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="numberValue" type="xs:long" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="strValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="dateValue" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="insertContractFlagResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- closeContractFlag -->
+    <xs:element name="closeContractFlagRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="flagType" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="closeContractFlagResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- signContract -->
+    <xs:element name="signContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="removeInsurance" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="sellerplaceCode" type="xs:string" minOccurs="0" maxOccurs="1" nillable="false"/>
+                <xs:element name="rdTwOutOfPartner" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="systemCode" type="st:systemCodeEnum" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="signContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="signContractFault" type="cntr:ContractWSFaultHandler" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- reSignContract -->
+    <xs:element name="reSignContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="sellerplaceCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="reSignContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- cancelContract -->
+    <xs:element name="cancelContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cancelContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getCustomerFinancialStatus -->
+    <xs:element name="getCustomerFinancialStatusRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCustomerFinancialStatusResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customerFinancialStatus" type="cntr:CustomerFinancialStatus" minOccurs="1"
+                            maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="generateContractNumberRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="generateContractNumberResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractInformationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="cardNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="overdraftOffersAmount" type="xs:int" minOccurs="0" maxOccurs="1" default="4"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractInformationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="contractStatus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="cardStatus" type="xs:string" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>validityCard property of type Card</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="outstandingDebts" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="overdraftLimits" type="xs:decimal" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="collectiveInsurance" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="accountNumber" type="xs:string" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>property creditAccount of type CreditInfo</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setCollectiveInsuranceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cardNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setCollectiveInsuranceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="inquiryNewOverdraftLimitRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cardNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="mobilePhoneNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="requiredAmount" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="originator" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="inquiryNewOverdraftLimitResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cancelCollectiveInsuranceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cancelCollectiveInsuranceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getInsuranceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="insuranceGroupCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getInsuranceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="contractInsurances" type="cntr:ContractInsurance" minOccurs="0"
+                            maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllInsuranceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllInsuranceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result"/>
+                <xs:element name="contractInsurances" type="cntr:ContractInsurances" minOccurs="0"
+                            maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllOnlineCreditInsuranceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllOnlineCreditInsuranceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result"/>
+                <xs:element name="contractInsurances" type="cntr:OnlineCreditContractInsurances" minOccurs="0"
+                            maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractPropertiesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractPropertiesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="contractProperties" type="cntr:ContractProperties" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- closeContractMethod -->
+    <xs:element name="closeContractMethodRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"
+                            minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="closeContractMethodResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1"
+                            maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractServicesAvailabilityRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CUID" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="gID" type="cntr:GID" minOccurs="0" maxOccurs="1" nillable="true">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Complex type for contract information. Consists of:
+                            systemCode - standart type system code
+                            branch - brach number
+                            typeObject - product type (CREDITLOAN, CREDITCARD, CREDITPOS)
+                            id - contract number
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractServicesAvailabilityResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractServicesInfo" type="cntr:ContractServicesInfo" minOccurs="0"
+                            maxOccurs="unbounded"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1" nillable="false"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!--SetLoanPaymentAccount START-->
+    <xs:element name="SetLoanPaymentAccountCBV3Request">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="scCreditId" type="xs:long"/>
+                <xs:element name="nncCard" type="cntr:NNCCard"/>
+                <xs:element name="partnerCode" type="xs:string"/>
+                <xs:element name="emplId" type="xs:long"/>
+                <xs:element name="requestId" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="SetLoanPaymentAccountCBV3Response">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rdId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--SetLoanPaymentAccount END-->
+
+    <xs:element name="getContractFlagHistoryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="flagType" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractFlagHistoryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result"/>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="contractFlag" type="cntr:ContractFlag" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getIdCreditsByEvidSrvsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumbers" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getIdCreditsByEvidSrvsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="idCredits" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- setCreditFlag -->
+    <xs:element name="setCreditFlagRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="flagType">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="CHANNEL_SALE"/>
+                            <xs:enumeration value="LOGISTIC_DELIVERY"/>
+                            <xs:enumeration value="TKK"/>
+                            <xs:enumeration value="FIN_PROTECT_TW"/>
+                            <xs:enumeration value="SMS_PACKAGE_SELECTED"/>
+                            <xs:enumeration value="OUTLIMIT_SERVICE"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="numberValue" type="xs:long" minOccurs="0"/>
+                <xs:element name="strValue" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="setCreditFlagResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractAggregateInfoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractAggregateInfoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ContractAggregateInfo" type="cntr:ContractAggregateInfo" minOccurs="0"
+                            maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getContractsForReSign -->
+    <xs:element name="getContractsForReSignRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractsForReSignResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractService" type="cntr:ContractService" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- getContractsReSigned -->
+    <xs:element name="getContractsReSignedRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractsReSignedResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractService" type="cntr:ContractService" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- orderInstalmentCalendar -->
+    <xs:element name="orderInstalmentCalendarRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="orderInstalmentCalendarResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="cancelRepaymentMethodRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cancelRepaymentMethodResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- runSaveDuplicates -->
+    <xs:element name="runSaveDuplicatesRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="runSaveDuplicatesResponse">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- prepareProcessedDuplicatesRequest -->
+    <xs:element name="prepareProcessedDuplicatesRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="prepareProcessedDuplicatesResponse">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="loanApplicationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="photo" type="cntr:PhotoClient" minOccurs="0"/>
+                <xs:element name="internalCode" type="xs:string" minOccurs="0"/>
+                <xs:element name="regionCode" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="loanApplicationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string" minOccurs="0"/>
+                <xs:element name="status" type="xs:string" minOccurs="0"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOuterLimitAvailabilityRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="operation">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="ON"/>
+                            <xs:enumeration value="OFF"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOuterLimitAvailabilityResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="availability" type="xs:boolean"/>
+                <xs:element name="rejectReason" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAttachNNCtoContractRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="action" type="xs:string"/>
+                <xs:element name="contractNumber" type="xs:string"/>
+                <xs:element name="nncNumber" type="xs:string"/>
+                <xs:element name="quorumUserCode" type="xs:string"/>
+                <xs:element name="otp" type="xs:string" nillable="true"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAttachNNCtoContractResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="documentBody" type="xs:hexBinary" minOccurs="0"/>
+                <xs:element name="phone" type="xs:string" minOccurs="0"/>
+                <xs:element name="result" type="cmmn:Result"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getActualOuterLimitAmountResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="outerLimitAmount" type="xs:decimal" nillable="true"/>
+                <xs:element name="result" type="cmmn:Result" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPartnerProductRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="posContractNumber" type="xs:string" minOccurs="0"/>
+                <xs:element name="rdContractNumber" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPartnerProductResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="posContractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="rdContractNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="accountNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="merchantId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="idTerminal" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="ito" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="action" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="goods" type="good:GoodsItemExtension" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="paymentNum" type="xs:int" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="sellerplaceName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="productName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="creditAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="outerLimit" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="merchantTrustLevel" type="xs:int" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="resettingLimit" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="amountRdlm" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getActualOuterLimitAmountRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractDetailByCuidRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getContractDetailByCuidResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="lastTMPDate" type="xs:date" minOccurs="0" />
+                <xs:element name="loans" type="cntr:Loan" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="unbindNoNameCardRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="contractNumber" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="unbindNoNameCardResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="result" type="cmmn:Result"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="isClientHaveSignedCreditsFromDateRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cuid" type="xs:long" nillable="false"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="isClientHaveSignedCreditsFromDateResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isHaveSignedContract" type="xs:boolean" nillable="false"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
